@@ -144,9 +144,9 @@ else:  # Opción: Planificador Financiero
             # Leer contenido del PDF si se sube uno
             pdf_content = ""
             if uploaded_file is not None:
-                with PyPDF2.PdfReader(uploaded_file) as pdf_reader:
-                    for page in pdf_reader.pages:
-                        pdf_content += page.extract_text() + "\n"
+                pdf_reader = PyPDF2.PdfReader(uploaded_file)
+                for page in pdf_reader.pages:
+                    pdf_content += page.extract_text() + "\n"
 
             total_ingresos = ingresos_fijos + ingresos_variables
             total_costos = costos_fijos + costos_variables

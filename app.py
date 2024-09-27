@@ -5,7 +5,7 @@ import PyPDF2
 
 # Configura Streamlit
 st.set_page_config(
-    page_title="Generador de Ideas y Modelos de Negocio - IngenIAr",
+    page_title="CREA Y PLANIFICA CON INGENIAR",
     page_icon=":lightbulb:",
     layout="centered",
 )
@@ -25,7 +25,7 @@ generation_config = {
 }
 
 # Título de la web
-st.title("Generador de Ideas y Modelos de Negocio 💡")
+st.title("CREA Y PLANIFICA CON INGENIAR 💡")
 
 # Selección de la funcionalidad
 option = st.selectbox("Elige una opción:", ("Generar Ideas de Negocio", "Generar Modelo de Negocio", "Planificador Financiero", "Validador de Ideas"))

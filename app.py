@@ -30,6 +30,10 @@ st.title("Generador de Ideas y Modelos de Negocio 💡")
 # Selección de la funcionalidad
 option = st.selectbox("Elige una opción:", ("Generar Ideas de Negocio", "Generar Modelo de Negocio", "Planificador Financiero"))
 
+# Barra de progreso al cambiar de opción
+with st.spinner("Cargando..."):
+    time.sleep(1)  # Simula un pequeño retraso al cambiar de opción
+
 if option == "Generar Ideas de Negocio":
     st.header("Cuéntanos sobre ti")
 

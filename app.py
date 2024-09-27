@@ -61,7 +61,8 @@ if st.button("Generar Modelo de Negocio"):
 
     # Envía el prompt a Gemini para obtener el modelo de negocio
     try:
-        response = model.call(prompt)  # Cambia a 'call' o el método correcto según la API
+        # Cambia 'model.call' a 'model.generate_response' o el método correcto según la API
+        response = model.generate_response(prompt)  # Ajusta aquí según lo que encuentres en la documentación
         # Muestra el modelo de negocio al usuario
         st.markdown(f"## Modelo de Negocio Canvas Generado:\n{response}")
     except Exception as e:

@@ -1,5 +1,6 @@
 import streamlit as st
 import google.generativeai as gen_ai
+import time  # Para simular el retraso en la generación
 
 # Configura Streamlit
 st.set_page_config(
@@ -65,9 +66,19 @@ if option == "Generar Ideas de Negocio":
                                       "Proporciona ideas creativas basadas en la información proporcionada."
                 )
 
+                # Inicializa la sesión de chat
                 chat_session = model.start_chat(history=[])
+
+                # Muestra una barra de progreso
+                progress = st.progress(0)
+                for i in range(100):  # Simula un proceso de generación
+                    time.sleep(0.05)  # Simulación de tiempo de espera
+                    progress.progress(i + 1)
+
+                # Envía el mensaje al modelo y obtiene la respuesta
                 gemini_response = chat_session.send_message(prompt)
 
+                # Muestra las ideas al usuario
                 st.markdown(f"## Ideas de negocio:\n{gemini_response.text}")
             except Exception as e:
                 st.error(f"Ocurrió un error al generar las ideas: {str(e)}")
@@ -106,9 +117,19 @@ else:  # Opción: Generar Modelo de Negocio
                                   "Utiliza la idea proporcionada para generar un modelo de negocio y sugerencias de estrategias."
             )
 
+            # Inicializa la sesión de chat
             chat_session = model.start_chat(history=[])
+
+            # Muestra una barra de progreso
+            progress = st.progress(0)
+            for i in range(100):  # Simula un proceso de generación
+                time.sleep(0.05)  # Simulación de tiempo de espera
+                progress.progress(i + 1)
+
+            # Envía el mensaje al modelo y obtiene la respuesta
             gemini_response = chat_session.send_message(prompt)
 
+            # Muestra el modelo de negocio al usuario
             st.markdown(f"## Modelo de Negocio Canvas Generado:\n{gemini_response.text}")
         except Exception as e:
             st.error(f"Error al generar el modelo de negocio: {str(e)}")

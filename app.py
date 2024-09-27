@@ -32,7 +32,7 @@ model = gen_ai.GenerativeModel(
 )
 
 # Título de la web
-st.title("Generador de Modelos de Negocio💡")
+st.title("Generador de Modelos de Negocio Canvas 💡")
 
 # Sección de información del negocio
 st.header("Proporcione su idea de negocio")
@@ -65,7 +65,7 @@ if st.button("Generar Modelo de Negocio"):
 
         # Envía el prompt a Gemini para obtener el modelo de negocio
         try:
-            response = model.generate_text(text=prompt)  # Cambia 'generate' por 'generate_text'
+            response = model.generate_text(prompt)  # Cambia a generate_text si es necesario
             # Muestra el modelo de negocio al usuario
             st.markdown(f"## Modelo de Negocio Canvas Generado:\n{response.text}")
         except Exception as e:

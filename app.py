@@ -69,11 +69,14 @@ if option == "Generar Ideas de Negocio":
                 # Inicializa la sesión de chat
                 chat_session = model.start_chat(history=[])
 
-                # Muestra una barra de progreso
-                progress = st.progress(0)
-                for i in range(100):  # Simula un proceso de generación
-                    time.sleep(0.05)  # Simulación de tiempo de espera
-                    progress.progress(i + 1)
+                # Muestra una barra de progreso y un GIF de un niño caminando
+                with st.spinner("Generando ideas..."):
+                    # Puedes poner aquí el GIF que quieras, asegurándote de que esté en la misma carpeta o en una URL accesible
+                    st.image("ruta/a/tu/gif/nino_caminando.gif")  # Reemplaza con la ruta del GIF
+
+                    # Simula tiempo de espera
+                    for i in range(100):
+                        time.sleep(0.05)
 
                 # Envía el mensaje al modelo y obtiene la respuesta
                 gemini_response = chat_session.send_message(prompt)
@@ -120,11 +123,13 @@ else:  # Opción: Generar Modelo de Negocio
             # Inicializa la sesión de chat
             chat_session = model.start_chat(history=[])
 
-            # Muestra una barra de progreso
-            progress = st.progress(0)
-            for i in range(100):  # Simula un proceso de generación
-                time.sleep(0.05)  # Simulación de tiempo de espera
-                progress.progress(i + 1)
+            # Muestra una barra de progreso y un GIF de un niño caminando
+            with st.spinner("Generando modelo de negocio..."):
+                st.image("ruta/a/tu/gif/nino_caminando.gif")  # Reemplaza con la ruta del GIF
+
+                # Simula tiempo de espera
+                for i in range(100):
+                    time.sleep(0.05)
 
             # Envía el mensaje al modelo y obtiene la respuesta
             gemini_response = chat_session.send_message(prompt)

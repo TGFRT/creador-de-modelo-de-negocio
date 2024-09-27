@@ -3,7 +3,7 @@ import google.generativeai as gen_ai
 
 # Configura Streamlit
 st.set_page_config(
-    page_title="Generador de Ideas de Negocio - IngenIAr",
+    page_title="Generador de Ideas y Modelos de Negocio - IngenIAr",
     page_icon=":lightbulb:",
     layout="centered",
 )
@@ -23,53 +23,92 @@ generation_config = {
 }
 
 # Título de la web
-st.title("Generador de Ideas de Negocio 💡")
+st.title("Generador de Ideas y Modelos de Negocio 💡")
 
-# Sección de información del usuario
-st.header("Cuéntanos sobre ti")
+# Selección de la funcionalidad
+option = st.selectbox("Elige una opción:", ("Generar Ideas de Negocio", "Generar Modelo de Negocio"))
 
-# Cajas de texto para ingresar información del usuario
-intereses = st.text_area("¿Cuáles son tus intereses o pasiones?")
-experiencia = st.text_area("¿Cuál es tu experiencia laboral o académica?")
-conocimientos = st.text_area("¿En qué áreas tienes conocimientos o habilidades?")
-mercado = st.text_area("¿Qué tipo de mercado te interesa?")
-problemas = st.text_area("¿Qué problemas o necesidades quieres resolver?")
+if option == "Generar Ideas de Negocio":
+    st.header("Cuéntanos sobre ti")
 
-# Botón para iniciar la generación de ideas
-if st.button("Generar Ideas"):
-    # Validación de entradas
-    if not (intereses and experiencia and conocimientos and mercado and problemas):
-        st.error("Por favor, completa todos los campos antes de generar ideas.")
-    else:
+    # Cajas de texto para ingresar información del usuario
+    intereses = st.text_area("¿Cuáles son tus intereses o pasiones?")
+    experiencia = st.text_area("¿Cuál es tu experiencia laboral o académica?")
+    conocimientos = st.text_area("¿En qué áreas tienes conocimientos o habilidades?")
+    mercado = st.text_area("¿Qué tipo de mercado te interesa?")
+    problemas = st.text_area("¿Qué problemas o necesidades quieres resolver?")
+
+    # Botón para iniciar la generación de ideas
+    if st.button("Generar Ideas"):
+        # Validación de entradas
+        if not (intereses and experiencia and conocimientos and mercado and problemas):
+            st.error("Por favor, completa todos los campos antes de generar ideas.")
+        else:
+            # Crea el prompt para la API de Gemini
+            prompt = f"""
+            Genera 5 ideas de negocio innovadoras para una persona con las siguientes características:
+            - Intereses: {intereses}
+            - Experiencia: {experiencia}
+            - Conocimientos: {conocimientos}
+            - Mercado: {mercado}
+            - Problemas a resolver: {problemas}
+            
+            Incluye una breve descripción de cada idea y su potencial mercado.
+            """
+
+            # Envía el prompt a Gemini para obtener las ideas
+            try:
+                model = gen_ai.GenerativeModel(
+                    model_name="gemini-1.5-flash",
+                    generation_config=generation_config,
+                    system_instruction="Eres un generador de ideas de negocio innovadoras. "
+                                      "Proporciona ideas creativas basadas en la información proporcionada."
+                )
+
+                chat_session = model.start_chat(history=[])
+                gemini_response = chat_session.send_message(prompt)
+
+                st.markdown(f"## Ideas de negocio:\n{gemini_response.text}")
+            except Exception as e:
+                st.error(f"Ocurrió un error al generar las ideas: {str(e)}")
+
+else:  # Opción: Generar Modelo de Negocio
+    st.header("Proporcione su idea de negocio")
+
+    # Campo de entrada para la idea del negocio
+    idea_negocio = st.text_area("Describe tu idea de negocio")
+
+    # Botón para iniciar la generación del modelo de negocio
+    if st.button("Generar Modelo de Negocio"):
         # Crea el prompt para la API de Gemini
         prompt = f"""
-        Genera 5 ideas de negocio innovadoras para una persona con las siguientes características:
-        - Intereses: {intereses}
-        - Experiencia: {experiencia}
-        - Conocimientos: {conocimientos}
-        - Mercado: {mercado}
-        - Problemas a resolver: {problemas}
+        Crea un modelo de negocio Canvas basado en la siguiente idea:
         
-        Incluye una breve descripción de cada idea y su potencial mercado.
+        Idea de negocio: {idea_negocio}
+
+        Incluye los siguientes componentes:
+        - Propuesta de valor
+        - Segmentos de clientes
+        - Fuentes de ingresos
+        - Actividades clave
+        - Recursos clave
+        - Canales
+        
+        Además, proporciona sugerencias de estrategias para mejorar cada área.
         """
 
-        # Envía el prompt a Gemini para obtener las ideas
+        # Envía el prompt a Gemini para obtener el modelo de negocio
         try:
-            # Crea el modelo de generación
             model = gen_ai.GenerativeModel(
                 model_name="gemini-1.5-flash",
                 generation_config=generation_config,
-                system_instruction="Eres un generador de ideas de negocio innovadoras. "
-                                  "Proporciona ideas creativas basadas en la información proporcionada."
+                system_instruction="Eres un asistente para crear modelos de negocio Canvas. "
+                                  "Utiliza la idea proporcionada para generar un modelo de negocio y sugerencias de estrategias."
             )
 
-            # Inicializa la sesión de chat
             chat_session = model.start_chat(history=[])
-
-            # Envía el mensaje al modelo y obtiene la respuesta
             gemini_response = chat_session.send_message(prompt)
 
-            # Muestra las ideas al usuario
-            st.markdown(f"## Ideas de negocio:\n{gemini_response.text}")
+            st.markdown(f"## Modelo de Negocio Canvas Generado:\n{gemini_response.text}")
         except Exception as e:
-            st.error(f"Ocurrió un error al generar las ideas: {str(e)}")
+            st.error(f"Error al generar el modelo de negocio: {str(e)}")

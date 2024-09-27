@@ -1,6 +1,7 @@
 import streamlit as st
 import google.generativeai as gen_ai
 import time  # Para simular el retraso en la generación
+import PyPDF2  # Para leer archivos PDF
 
 # Configura Streamlit
 st.set_page_config(
@@ -129,11 +130,24 @@ else:  # Opción: Planificador Financiero
     # Selección de moneda
     moneda = st.selectbox("Selecciona la moneda:", ["Dólares (USD)", "Soles (PEN)", "Euros (EUR)"])
 
+    # Campo para describir el negocio
+    descripcion_negocio = st.text_area("Describe tu negocio y su estructura:")
+
+    # Subida de archivo PDF
+    uploaded_file = st.file_uploader("Sube un archivo PDF con información adicional", type="pdf")
+
     if st.button("Generar Plan Financiero"):
         # Validación de entradas
         if ingresos_fijos < 0 or ingresos_variables < 0 or costos_fijos < 0 or costos_variables < 0:
             st.error("Por favor, ingresa valores válidos para ingresos y costos.")
         else:
+            # Leer contenido del PDF si se sube uno
+            pdf_content = ""
+            if uploaded_file is not None:
+                with PyPDF2.PdfReader(uploaded_file) as pdf_reader:
+                    for page in pdf_reader.pages:
+                        pdf_content += page.extract_text() + "\n"
+
             total_ingresos = ingresos_fijos + ingresos_variables
             total_costos = costos_fijos + costos_variables
             rentabilidad = total_ingresos - total_costos
@@ -145,6 +159,8 @@ else:  # Opción: Planificador Financiero
             - Costos fijos proyectados: {costos_fijos} {moneda}
             - Costos variables proyectados: {costos_variables} {moneda}
             - Rentabilidad proyectada: {rentabilidad} {moneda}
+            - Descripción del negocio: {descripcion_negocio}
+            - Información adicional del PDF: {pdf_content}
             
             Proporciona un análisis de la rentabilidad y sugerencias para optimizar los costos.
             """

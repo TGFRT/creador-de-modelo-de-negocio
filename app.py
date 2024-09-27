@@ -32,7 +32,7 @@ model = gen_ai.GenerativeModel(
 )
 
 # Título de la web
-st.title("Generador de Modelos de Negocio 💡")
+st.title("Generador de Modelos de Negocio Canvas 💡")
 
 # Sección de información del negocio
 st.header("Proporcione su idea de negocio")
@@ -42,31 +42,27 @@ idea_negocio = st.text_area("Describe tu idea de negocio")
 
 # Botón para iniciar la generación del modelo de negocio
 if st.button("Generar Modelo de Negocio"):
-    # Validación de entrada
-    if not idea_negocio.strip():
-        st.warning("Por favor, ingrese una idea de negocio.")
-    else:
-        # Crea el prompt para la API de Gemini
-        prompt = f"""
-        Crea un modelo de negocio Canvas basado en la siguiente idea:
-        
-        Idea de negocio: {idea_negocio}
+    # Crea el prompt para la API de Gemini
+    prompt = f"""
+    Crea un modelo de negocio Canvas basado en la siguiente idea:
+    
+    Idea de negocio: {idea_negocio}
 
-        Incluye los siguientes componentes:
-        - Propuesta de valor
-        - Segmentos de clientes
-        - Fuentes de ingresos
-        - Actividades clave
-        - Recursos clave
-        - Canales
-        
-        Además, proporciona sugerencias de estrategias para mejorar cada área.
-        """
+    Incluye los siguientes componentes:
+    - Propuesta de valor
+    - Segmentos de clientes
+    - Fuentes de ingresos
+    - Actividades clave
+    - Recursos clave
+    - Canales
+    
+    Además, proporciona sugerencias de estrategias para mejorar cada área.
+    """
 
-        # Envía el prompt a Gemini para obtener el modelo de negocio
-        try:
-            response = model.generate_text(prompt)  # Cambia a generate_text si es necesario
-            # Muestra el modelo de negocio al usuario
-            st.markdown(f"## Modelo de Negocio Canvas Generado:\n{response.text}")
-        except Exception as e:
-            st.error(f"Error al generar el modelo de negocio: {str(e)}")
+    # Envía el prompt a Gemini para obtener el modelo de negocio
+    try:
+        response = model.call(prompt)  # Cambia a 'call' o el método correcto según la API
+        # Muestra el modelo de negocio al usuario
+        st.markdown(f"## Modelo de Negocio Canvas Generado:\n{response}")
+    except Exception as e:
+        st.error(f"Error al generar el modelo de negocio: {str(e)}")

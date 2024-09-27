@@ -32,7 +32,7 @@ model = gen_ai.GenerativeModel(
 )
 
 # Título de la web
-st.title("Generador de Modelos de Negocio Canvas 💡")
+st.title("Generador de Modelos de Negocio 💡")
 
 # Sección de información del negocio
 st.header("Proporcione su idea de negocio")

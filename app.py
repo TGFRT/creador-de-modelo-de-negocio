@@ -1,7 +1,7 @@
 import streamlit as st
 import google.generativeai as gen_ai
-import time  # Para simular el retraso en la generación
-import PyPDF2  # Para leer archivos PDF
+import time
+import PyPDF2
 
 # Configura Streamlit
 st.set_page_config(
@@ -28,11 +28,11 @@ generation_config = {
 st.title("Generador de Ideas y Modelos de Negocio 💡")
 
 # Selección de la funcionalidad
-option = st.selectbox("Elige una opción:", ("Generar Ideas de Negocio", "Generar Modelo de Negocio", "Planificador Financiero"))
+option = st.selectbox("Elige una opción:", ("Generar Ideas de Negocio", "Generar Modelo de Negocio", "Planificador Financiero", "Validador de Ideas"))
 
 # Barra de progreso al cambiar de opción
 with st.spinner("Cargando..."):
-    time.sleep(1)  # Simula un pequeño retraso al cambiar de opción
+    time.sleep(1)
 
 if option == "Generar Ideas de Negocio":
     st.header("Cuéntanos sobre ti")
@@ -122,7 +122,7 @@ elif option == "Generar Modelo de Negocio":
         except Exception as e:
             st.error(f"Error al generar el modelo de negocio: {str(e)}")
 
-else:  # Opción: Planificador Financiero
+elif option == "Planificador Financiero":
     st.header("Planificador Financiero")
 
     # Entradas para ingresos y costos
@@ -189,3 +189,45 @@ else:  # Opción: Planificador Financiero
                 st.markdown(f"## Plan Financiero Generado:\n{gemini_response.text}")
             except Exception as e:
                 st.error(f"Error al generar el plan financiero: {str(e)}")
+
+else:  # Opción: Validador de Ideas
+    st.header("Validador de Ideas de Negocio")
+
+    # Campo de entrada para la idea de negocio
+    idea_negocio = st.text_area("Describe tu idea de negocio")
+
+    # Botón para validar la idea
+    if st.button("Validar Idea"):
+        if not idea_negocio:
+            st.error("Por favor, ingresa una descripción de tu idea de negocio.")
+        else:
+            prompt = f"""
+            Evalúa la viabilidad de la siguiente idea de negocio:
+            Idea de negocio: {idea_negocio}
+            
+            Proporciona comentarios sobre:
+            - Oportunidades de mercado
+            - Potenciales desafíos
+            - Sugerencias para mejorar la idea
+            """
+
+            try:
+                model = gen_ai.GenerativeModel(
+                    model_name="gemini-1.5-flash",
+                    generation_config=generation_config,
+                    system_instruction="Eres un validador de ideas de negocio. "
+                                      "Proporciona comentarios sobre la viabilidad de la idea presentada."
+                )
+
+                chat_session = model.start_chat(history=[])
+
+                progress = st.progress(0)
+                for i in range(100):
+                    time.sleep(0.05)  # Simulación de tiempo de espera
+                    progress.progress(i + 1)
+
+                gemini_response = chat_session.send_message(prompt)
+
+                st.markdown(f"## Comentarios sobre la Idea:\n{gemini_response.text}")
+            except Exception as e:
+                st.error(f"Ocurrió un error al validar la idea: {str(e)}")

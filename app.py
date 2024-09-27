@@ -120,22 +120,31 @@ elif option == "Generar Modelo de Negocio":
 else:  # Opción: Planificador Financiero
     st.header("Planificador Financiero")
 
-    # Entradas para costos e ingresos
-    ingresos = st.number_input("Ingresos proyectados:", min_value=0.0, step=100.0)
-    costos = st.number_input("Costos proyectados:", min_value=0.0, step=100.0)
-    
+    # Entradas para ingresos y costos
+    ingresos_fijos = st.number_input("Ingresos fijos proyectados:", min_value=0.0, step=100.0)
+    ingresos_variables = st.number_input("Ingresos variables proyectados:", min_value=0.0, step=100.0)
+    costos_fijos = st.number_input("Costos fijos proyectados:", min_value=0.0, step=100.0)
+    costos_variables = st.number_input("Costos variables proyectados:", min_value=0.0, step=100.0)
+
     # Selección de moneda
     moneda = st.selectbox("Selecciona la moneda:", ["Dólares (USD)", "Soles (PEN)", "Euros (EUR)"])
 
     if st.button("Generar Plan Financiero"):
         # Validación de entradas
-        if ingresos <= 0 or costos < 0:
+        if ingresos_fijos < 0 or ingresos_variables < 0 or costos_fijos < 0 or costos_variables < 0:
             st.error("Por favor, ingresa valores válidos para ingresos y costos.")
         else:
+            total_ingresos = ingresos_fijos + ingresos_variables
+            total_costos = costos_fijos + costos_variables
+            rentabilidad = total_ingresos - total_costos
+            
             prompt = f"""
             Genera un plan financiero realista para un negocio con los siguientes datos:
-            - Ingresos proyectados: {ingresos} {moneda}
-            - Costos proyectados: {costos} {moneda}
+            - Ingresos fijos proyectados: {ingresos_fijos} {moneda}
+            - Ingresos variables proyectados: {ingresos_variables} {moneda}
+            - Costos fijos proyectados: {costos_fijos} {moneda}
+            - Costos variables proyectados: {costos_variables} {moneda}
+            - Rentabilidad proyectada: {rentabilidad} {moneda}
             
             Proporciona un análisis de la rentabilidad y sugerencias para optimizar los costos.
             """
